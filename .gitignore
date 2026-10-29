@@ -1,0 +1,15 @@
+/target/
+/.tools/
+/.m2/
+*.class
+*.log
+.env
+.env.*
+!.env.example
+/config/local.properties
+/src/main/resources/application-local.properties
+/.idea/
+*.iml
+/.vscode/
+.DS_Store
+Thumbs.db
