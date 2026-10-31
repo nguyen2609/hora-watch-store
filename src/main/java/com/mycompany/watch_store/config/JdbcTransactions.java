@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.Savepoint;
 import java.sql.SQLException;
 
-/** Shared transaction ownership rules for multi-statement cart operations. */
+/** Shared transaction ownership rules for cart and checkout operations. */
 public final class JdbcTransactions {
     private JdbcTransactions() {
     }
@@ -28,7 +28,7 @@ public final class JdbcTransactions {
             }
         }
         if (borrowed.getAutoCommit()) {
-            throw new SQLException("A borrowed connection must have autoCommit=false for cart operations.");
+            throw new SQLException("A borrowed connection must have autoCommit=false for transactional operations.");
         }
         Savepoint savepoint = borrowed.setSavepoint();
         try {

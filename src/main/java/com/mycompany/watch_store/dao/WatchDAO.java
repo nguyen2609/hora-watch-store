@@ -64,6 +64,44 @@ public final class WatchDAO {
         });
     }
 
+    /** Locks a watch until the caller's transaction ends; returns null for a missing ID. */
+    public Watch findByIdForUpdate(int id) throws SQLException {
+        requirePositiveId(id);
+        if (transactionConnection == null || transactionConnection.getAutoCommit()) {
+            throw new SQLException("Stock locking requires a borrowed connection with autoCommit=false.");
+        }
+        try (PreparedStatement statement = transactionConnection.prepareStatement(
+                "SELECT " + COLUMNS + " FROM app.watches WHERE id = ? FOR UPDATE")) {
+            statement.setInt(1, id);
+            try (ResultSet result = statement.executeQuery()) {
+                return result.next() ? mapRow(result) : null;
+            }
+        }
+    }
+
+    /** Atomic database-side guard; never replaces stock with a stale Java field. */
+    public void deductStock(int id, int quantity) throws SQLException {
+        requirePositiveId(id);
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Stock deduction quantity must be greater than 0.");
+        }
+        withConnection(connection -> {
+            String sql = """
+                    UPDATE app.watches SET stock_quantity = stock_quantity - ?
+                    WHERE id = ? AND available = TRUE AND stock_quantity >= ?
+                    """;
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, quantity);
+                statement.setInt(2, id);
+                statement.setInt(3, quantity);
+                if (statement.executeUpdate() != 1) {
+                    throw new SQLException("Watch stock could not be deducted safely.", "02000");
+                }
+            }
+            return null;
+        });
+    }
+
     /** Inserts only a new entity and assigns the database-generated ID and creation time. */
     public int insert(Watch watch) throws SQLException {
         validateForWrite(watch);

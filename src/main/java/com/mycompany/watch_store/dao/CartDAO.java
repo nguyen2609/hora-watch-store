@@ -29,9 +29,20 @@ public final class CartDAO {
 
     /** Returns null when this user has no cart; keeps persisted metadata unchanged. */
     public Cart findByUserId(int userId) throws SQLException {
+        return findByUserId(userId, false);
+    }
+
+    /** Checkout must use a borrowed transaction to retain the exclusive cart lock. */
+    public Cart findByUserIdForUpdate(int userId) throws SQLException {
+        return findByUserId(userId, true);
+    }
+
+    private Cart findByUserId(int userId, boolean exclusive) throws SQLException {
         positiveId(userId);
         return JdbcTransactions.execute(transactionConnection, connection -> {
-            String sql = "SELECT id, created_at, updated_at FROM app.carts WHERE user_id = ? FOR SHARE";
+            String sql = exclusive
+                    ? "SELECT id, created_at, updated_at FROM app.carts WHERE user_id = ? FOR UPDATE"
+                    : "SELECT id, created_at, updated_at FROM app.carts WHERE user_id = ? FOR SHARE";
             int cartId;
             LocalDateTime createdAt;
             LocalDateTime updatedAt;

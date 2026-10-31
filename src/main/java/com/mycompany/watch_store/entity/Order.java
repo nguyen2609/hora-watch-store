@@ -1,6 +1,7 @@
 package com.mycompany.watch_store.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,24 @@ public final class Order extends BaseEntity {
         this.recipientName = EntityValidation.requiredText(recipientName, "Recipient name", 100);
         this.recipientPhone = EntityValidation.requiredText(recipientPhone, "Recipient phone", 20);
         this.shippingAddress = EntityValidation.requiredText(shippingAddress, "Shipping address", Integer.MAX_VALUE);
+    }
+
+    /** Rehydrates stored state without replaying business transitions or exposing a status setter. */
+    public Order(int id, int userId, String recipientName, String recipientPhone, String shippingAddress,
+                 String status, LocalDateTime createdAt, List<OrderItem> items) {
+        this(userId, recipientName, recipientPhone, shippingAddress);
+        setId(id);
+        setCreatedAt(createdAt);
+        if (status == null || !List.of("PENDING", "CONFIRMED", "SHIPPING", "DELIVERED", "CANCELLED").contains(status)) {
+            throw new IllegalArgumentException("Unknown stored order status.");
+        }
+        if (items == null) {
+            throw new IllegalArgumentException("Order items must not be null.");
+        }
+        for (OrderItem item : items) {
+            addItem(item);
+        }
+        this.status = status;
     }
 
     public int getUserId() { return userId; }
