@@ -15,6 +15,19 @@ public final class Cart extends BaseEntity {
         updatedAt = getCreatedAt();
     }
 
+    /** Restores persisted metadata after validating and copying the stored items. */
+    public Cart(int id, int userId, LocalDateTime createdAt, LocalDateTime updatedAt, List<CartItem> items) {
+        super(id, createdAt);
+        this.userId = EntityValidation.positiveId(userId, "User ID");
+        if (updatedAt == null || items == null) {
+            throw new IllegalArgumentException("Updated time and cart items must not be null.");
+        }
+        for (CartItem item : items) {
+            addItem(item);
+        }
+        this.updatedAt = updatedAt;
+    }
+
     public int getUserId() { return userId; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
