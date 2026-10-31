@@ -102,6 +102,29 @@ public final class WatchDAO {
         });
     }
 
+    /** Restores cancelled quantities, including discontinued products, without overflowing int. */
+    public void restoreStock(int id, int quantity) throws SQLException {
+        requirePositiveId(id);
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("Stock restoration quantity must be greater than 0.");
+        }
+        withConnection(connection -> {
+            String sql = """
+                    UPDATE app.watches SET stock_quantity = stock_quantity + ?
+                    WHERE id = ? AND stock_quantity <= 2147483647 - ?
+                    """;
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, quantity);
+                statement.setInt(2, id);
+                statement.setInt(3, quantity);
+                if (statement.executeUpdate() != 1) {
+                    throw new SQLException("Watch stock could not be restored safely.", "02000");
+                }
+            }
+            return null;
+        });
+    }
+
     /** Inserts only a new entity and assigns the database-generated ID and creation time. */
     public int insert(Watch watch) throws SQLException {
         validateForWrite(watch);

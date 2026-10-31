@@ -16,6 +16,23 @@ public final class Payment extends BaseEntity {
         this.amount = EntityValidation.money(amount, "Payment amount");
     }
 
+    /** Restores stored payment state without generating a new confirmation timestamp. */
+    public Payment(int id, int orderId, BigDecimal amount, String method, String status,
+                   LocalDateTime paidAt, LocalDateTime createdAt) {
+        this(orderId, amount);
+        EntityValidation.positiveId(orderId, "Order ID");
+        if (!"COD".equals(method)) {
+            throw new IllegalArgumentException("Stored payment method must be COD.");
+        }
+        if (!("UNPAID".equals(status) && paidAt == null) && !("PAID".equals(status) && paidAt != null)) {
+            throw new IllegalArgumentException("Payment status and paidAt are inconsistent.");
+        }
+        setId(id);
+        setCreatedAt(createdAt);
+        this.status = status;
+        this.paidAt = paidAt;
+    }
+
     public int getOrderId() { return orderId; }
     public BigDecimal getAmount() { return amount; }
     public String getMethod() { return method; }

@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.Savepoint;
 import java.sql.SQLException;
 
-/** Shared transaction ownership rules for cart and checkout operations. */
+/** Shared transaction ownership rules for multi-statement business operations. */
 public final class JdbcTransactions {
     private JdbcTransactions() {
     }

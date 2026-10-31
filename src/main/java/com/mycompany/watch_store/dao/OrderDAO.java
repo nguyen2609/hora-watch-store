@@ -13,6 +13,8 @@ import com.mycompany.watch_store.entity.Order;
 import com.mycompany.watch_store.entity.OrderItem;
 
 public final class OrderDAO {
+    private static final String COLUMNS = "id, user_id, recipient_name, recipient_phone, shipping_address, "
+            + "total_amount, status, payment_method, created_at";
     private final Connection transactionConnection;
 
     public OrderDAO() {
@@ -75,33 +77,126 @@ public final class OrderDAO {
 
     /** Internal persistence lookup; authorization of an order owner is a later API responsibility. */
     public Order findById(int id) throws SQLException {
-        if (id <= 0) {
-            throw new IllegalArgumentException("Order ID must be greater than 0.");
-        }
+        return findById(id, null, false);
+    }
+
+    /** Scoped lookup does not lock or expose a different user's order. */
+    public Order findByIdForUser(int userId, int orderId) throws SQLException {
+        positiveId(userId);
+        return findById(orderId, userId, false);
+    }
+
+    public Order findByIdForUpdate(int orderId) throws SQLException {
+        requireBorrowedTransaction();
+        return findById(orderId, null, true);
+    }
+
+    /** Non-locking owner discovery must precede acquiring the user and order locks. */
+    public Integer findOwnerId(int orderId) throws SQLException {
+        positiveId(orderId);
         return JdbcTransactions.execute(transactionConnection, connection -> {
-            // Also prevents a concurrent status update during aggregate hydration.
-            try (PreparedStatement statement = connection.prepareStatement(
-                    "SELECT user_id, recipient_name, recipient_phone, shipping_address, total_amount, "
-                            + "status, payment_method, created_at FROM app.orders WHERE id = ? FOR SHARE")) {
-                statement.setInt(1, id);
+            try (PreparedStatement statement = connection.prepareStatement("SELECT user_id FROM app.orders WHERE id = ?")) {
+                statement.setInt(1, orderId);
                 try (ResultSet result = statement.executeQuery()) {
-                    if (!result.next()) {
-                        return null;
-                    }
-                    if (!"COD".equals(result.getString("payment_method"))) {
-                        throw new SQLException("Unsupported stored payment method.");
-                    }
-                    Order order = new Order(id, result.getInt("user_id"), result.getString("recipient_name"),
-                            result.getString("recipient_phone"), result.getString("shipping_address"),
-                            result.getString("status"), result.getObject("created_at", LocalDateTime.class),
-                            readItems(connection, id));
-                    if (order.getTotalAmount().compareTo(result.getBigDecimal("total_amount")) != 0) {
-                        throw new SQLException("Stored order total does not match its items.");
-                    }
-                    return order;
+                    return result.next() ? result.getInt(1) : null;
                 }
             }
         });
+    }
+
+    public List<Order> findByUserId(int userId) throws SQLException {
+        positiveId(userId);
+        return JdbcTransactions.execute(transactionConnection, connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "SELECT " + COLUMNS + " FROM app.orders WHERE user_id = ? ORDER BY id FOR SHARE")) {
+                statement.setInt(1, userId);
+                try (ResultSet result = statement.executeQuery()) {
+                    List<Order> orders = new ArrayList<>();
+                    while (result.next()) {
+                        orders.add(mapRow(connection, result));
+                    }
+                    return orders;
+                }
+            }
+        });
+    }
+
+    public List<OrderItem> findItemsByOrderId(int orderId) throws SQLException {
+        positiveId(orderId);
+        return JdbcTransactions.execute(transactionConnection, connection -> {
+            try (PreparedStatement statement = connection.prepareStatement("SELECT id FROM app.orders WHERE id = ? FOR SHARE")) {
+                statement.setInt(1, orderId);
+                try (ResultSet result = statement.executeQuery()) {
+                    if (!result.next()) {
+                        throw new SQLException("Order does not exist.", "02000");
+                    }
+                }
+            }
+            return readItems(connection, orderId);
+        });
+    }
+
+    /** Compare-and-set guard complements the Service's row lock and transition validation. */
+    public void updateStatus(int orderId, String expectedStatus, String newStatus) throws SQLException {
+        positiveId(orderId);
+        if (expectedStatus == null || newStatus == null || expectedStatus.isBlank() || newStatus.isBlank()) {
+            throw new IllegalArgumentException("Order statuses must not be null or blank.");
+        }
+        JdbcTransactions.execute(transactionConnection, connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "UPDATE app.orders SET status = ? WHERE id = ? AND status = ?")) {
+                statement.setString(1, newStatus);
+                statement.setInt(2, orderId);
+                statement.setString(3, expectedStatus);
+                if (statement.executeUpdate() != 1) {
+                    throw new SQLException("Order is missing or its status changed unexpectedly.", "02000");
+                }
+            }
+            return null;
+        });
+    }
+
+    private Order findById(int id, Integer userId, boolean exclusive) throws SQLException {
+        positiveId(id);
+        return JdbcTransactions.execute(transactionConnection, connection -> {
+            String sql = "SELECT " + COLUMNS + " FROM app.orders WHERE id = ?"
+                    + (userId == null ? "" : " AND user_id = ?") + (exclusive ? " FOR UPDATE" : " FOR SHARE");
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, id);
+                if (userId != null) {
+                    statement.setInt(2, userId);
+                }
+                try (ResultSet result = statement.executeQuery()) {
+                    return result.next() ? mapRow(connection, result) : null;
+                }
+            }
+        });
+    }
+
+    private static Order mapRow(Connection connection, ResultSet result) throws SQLException {
+        if (!"COD".equals(result.getString("payment_method"))) {
+            throw new SQLException("Unsupported stored payment method.");
+        }
+        int id = result.getInt("id");
+        Order order = new Order(id, result.getInt("user_id"), result.getString("recipient_name"),
+                result.getString("recipient_phone"), result.getString("shipping_address"), result.getString("status"),
+                result.getObject("created_at", LocalDateTime.class), readItems(connection, id));
+        if (order.getTotalAmount().compareTo(result.getBigDecimal("total_amount")) != 0) {
+            throw new SQLException("Stored order total does not match its items.");
+        }
+        return order;
+    }
+
+    private void requireBorrowedTransaction() throws SQLException {
+        if (transactionConnection == null || transactionConnection.getAutoCommit()) {
+            throw new SQLException("Order locking requires a borrowed connection with autoCommit=false.");
+        }
+    }
+
+    private static void positiveId(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("ID must be greater than 0.");
+        }
     }
 
     private static OrderItem insertItem(Connection connection, int orderId, OrderItem item) throws SQLException {
