@@ -264,8 +264,8 @@ public final class OrderManagementDemo {
     // Package-private fixture helpers are shared only by the two M10 demos.
     static Fixture createFixture(Connection connection, String marker, int initialStock) throws SQLException {
         AuthService auth = new AuthService(new UserDAO(connection));
-        int owner = auth.register("M10 Customer A", marker + "-a@example.invalid", UUID.randomUUID().toString(), null).getId();
-        int other = auth.register("M10 Customer B", marker + "-b@example.invalid", UUID.randomUUID().toString(), null).getId();
+        int owner = auth.register("M10 Customer A", marker + "-a@example.invalid", UUID.randomUUID().toString().substring(0, 15), null).getId();
+        int other = auth.register("M10 Customer B", marker + "-b@example.invalid", UUID.randomUUID().toString().substring(0, 15), null).getId();
         int categoryId = 0;
         try (PreparedStatement statement = connection.prepareStatement("SELECT id FROM app.categories ORDER BY id LIMIT 1");
              ResultSet result = statement.executeQuery()) {

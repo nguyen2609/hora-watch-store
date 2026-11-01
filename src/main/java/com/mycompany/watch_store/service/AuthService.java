@@ -11,7 +11,7 @@ import com.mycompany.watch_store.entity.User;
 public final class AuthService {
     private static final String INVALID_CREDENTIALS = "Invalid email or password.";
     // Perform a password check even when a validly formatted email is unknown.
-    private static final String DUMMY_HASH = PasswordHasher.hash(UUID.randomUUID().toString());
+    private static final String DUMMY_HASH = PasswordHasher.hash(UUID.randomUUID().toString().substring(0, 15));
     private final UserDAO userDAO;
 
     public AuthService() {

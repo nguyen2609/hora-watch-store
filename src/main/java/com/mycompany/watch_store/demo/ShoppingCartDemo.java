@@ -48,7 +48,7 @@ public final class ShoppingCartDemo {
         connection.setAutoCommit(false);
         try {
             User user = new AuthService(new UserDAO(connection)).register("M08 Temporary Customer", email,
-                    UUID.randomUUID().toString(), null);
+                    UUID.randomUUID().toString().substring(0, 15), null);
             userId = user.getId();
             int categoryId = chooseCategory(connection, marker);
             WatchDAO watches = new WatchDAO(connection);
@@ -117,7 +117,7 @@ public final class ShoppingCartDemo {
             System.out.println("Failed operations rolled back to savepoints; previous cart changes preserved.");
 
             User other = new AuthService(new UserDAO(connection)).register("M08 Other Customer", "other-" + email,
-                    UUID.randomUUID().toString(), null);
+                    UUID.randomUUID().toString().substring(0, 15), null);
             expect("Another user's item removal", java.util.NoSuchElementException.class,
                     () -> service.removeFromCart(other.getId(), automaticId));
             require(carts.findByUserId(other.getId()) == null

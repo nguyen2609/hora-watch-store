@@ -5,8 +5,8 @@ import com.password4j.Password;
 import com.password4j.types.Argon2;
 
 public final class PasswordHasher {
-    private static final int MIN_LENGTH = 15;
-    private static final int MAX_LENGTH = 128;
+    private static final int MIN_LENGTH = 8;
+    private static final int MAX_LENGTH = 15;
     private static final Argon2Function ARGON2 = Argon2Function.getInstance(19456, 2, 1, 32, Argon2.ID);
 
     private PasswordHasher() {
@@ -15,7 +15,7 @@ public final class PasswordHasher {
     /** Passwords are never trimmed or logged. Salt and parameters are encoded in the result. */
     public static String hash(String password) {
         if (!hasValidLength(password)) {
-            throw new IllegalArgumentException("Password must contain 15 to 128 characters and must not be blank.");
+            throw new IllegalArgumentException("Password must contain 8 to 15 characters and must not be blank.");
         }
         return Password.hash(password).addRandomSalt(16).with(ARGON2).getResult();
     }

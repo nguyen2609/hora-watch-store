@@ -150,8 +150,8 @@ public final class CheckoutConcurrencyDemo {
                                           String autoModel, String smartModel) throws SQLException {
         return JdbcTransactions.execute(null, connection -> {
             AuthService auth = new AuthService(new UserDAO(connection));
-            int firstUser = auth.register("M09 Race A", firstEmail, UUID.randomUUID().toString(), null).getId();
-            int secondUser = auth.register("M09 Race B", secondEmail, UUID.randomUUID().toString(), null).getId();
+            int firstUser = auth.register("M09 Race A", firstEmail, UUID.randomUUID().toString().substring(0, 15), null).getId();
+            int secondUser = auth.register("M09 Race B", secondEmail, UUID.randomUUID().toString().substring(0, 15), null).getId();
             int categoryId = chooseCategory(connection, marker);
             WatchDAO watches = new WatchDAO(connection);
             int automaticId = watches.insert(new AutomaticWatch(categoryId, "M09 limited automatic", "Demo", autoModel,

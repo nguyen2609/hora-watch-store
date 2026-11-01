@@ -47,7 +47,7 @@ public final class ServiceLayerDemo {
         String autoModel = marker + "-auto";
         String smartModel = marker + "-smart";
         // Only transient random demo passwords; no credentials are stored in source code.
-        String password = UUID.randomUUID().toString();
+        String password = UUID.randomUUID().toString().substring(0, 15);
         UserDAO userDAO = new UserDAO(connection);
         WatchDAO watchDAO = new WatchDAO(connection);
         AuthService auth = new AuthService(userDAO);
@@ -118,7 +118,7 @@ public final class ServiceLayerDemo {
                     "Valid login failed.");
             System.out.println("Correct-password login verified (internal user only; no session created).");
             SecurityException wrong = expect("Incorrect password", SecurityException.class,
-                    () -> auth.login(email, UUID.randomUUID().toString()));
+                    () -> auth.login(email, UUID.randomUUID().toString().substring(0, 15)));
             SecurityException unknown = expect("Unknown account", SecurityException.class,
                     () -> auth.login("missing-" + email, password));
             require(wrong.getMessage().equals(unknown.getMessage()), "Login messages disclose account existence.");
@@ -137,7 +137,7 @@ public final class ServiceLayerDemo {
             expect("Invalid registration email", IllegalArgumentException.class,
                     () -> auth.register("M07 Customer", marker, password, null));
             expect("Short password", IllegalArgumentException.class,
-                    () -> auth.register("M07 Customer", "short-" + email, password.substring(0, 8), null));
+                    () -> auth.register("M07 Customer", "short-" + email, password.substring(0, 7), null));
             expect("Oversized password", IllegalArgumentException.class, () -> PasswordHasher.hash(password.repeat(4)));
             require(!PasswordHasher.verify(password, "$argon2id$invalid"), "Malformed hash was accepted.");
             expect("Negative maximum price", IllegalArgumentException.class,

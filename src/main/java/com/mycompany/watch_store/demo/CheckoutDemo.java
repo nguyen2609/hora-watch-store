@@ -53,7 +53,7 @@ public final class CheckoutDemo {
         connection.setAutoCommit(false);
         try {
             userId = new AuthService(new UserDAO(connection)).register("M09 Temporary Customer", email,
-                    UUID.randomUUID().toString(), null).getId();
+                    UUID.randomUUID().toString().substring(0, 15), null).getId();
             int categoryId = chooseCategory(connection, marker);
             WatchDAO watches = new WatchDAO(connection);
             automaticId = watches.insert(new AutomaticWatch(categoryId, "M09 automatic", "Demo", marker + "-auto",
