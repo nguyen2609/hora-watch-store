@@ -1,89 +1,145 @@
-# Online Watch Store Management System
+# HORA Watch Store
 
-Dự án OOP đại học sử dụng Java 17, Maven, PostgreSQL 14, JDBC, Gson,
-HttpServer tích hợp Java. M01 tạo bộ khung chạy console; M02 bổ sung BaseEntity abstract.
-Theo yêu cầu tiếp theo, src/test và JUnit đã được gỡ; chỉ tạo automated test
-khi người dùng yêu cầu rõ ràng.
+A watch e-commerce application with an English React storefront and a Java REST API.
+Customers browse automatic watches and smartwatches, manage a shopping cart and place
+Cash on Delivery orders. Administrators manage products, orders and payments.
 
-## Cài đặt và chạy
+## Features
 
-Yêu cầu JDK 17 và Maven 3.9.x. Mở thư mục dự án trong VS Code;
-Extension Pack for Java hỗ trợ mở và chạy dự án Maven.
+- **Customers:** product search, type/price filters, registration/login, cart quantities,
+  checkout, order history and purchase-time prices.
+- **Administrators:** product creation/editing, stock and availability, soft discontinuation,
+  delivery statuses, cancellation with stock restoration, and COD payment confirmation.
+- **Security:** Argon2id password hashing, HttpOnly sessions, CSRF/origin checks,
+  server-side roles and ownership, prepared statements, and transactional checkout.
 
-Từ PowerShell tại `C:\watch_order`, khi Maven có trên PATH:
+## Stack and architecture
 
-```powershell
-mvn clean verify
-java -jar target/watch-store-1.0-SNAPSHOT.jar
-```
-
-Môi trường thiết lập ban đầu chỉ có JDK 24.0.1, chưa có Maven trên PATH.
-Maven 3.9.11 đã được tải vào `.tools` (không commit). Trong môi trường này:
-
-```powershell
-.\.tools\apache-maven-3.9.11\bin\mvn.cmd "-Dmaven.repo.local=C:\watch_order\.m2\repository" clean verify
-java -jar target/watch-store-1.0-SNAPSHOT.jar
-```
-
-Kết quả mong đợi: `Online Watch Store Management System started.`
-POM dùng `maven.compiler.release=17` để giới hạn cú pháp, API Java SE và bytecode
-ở Java 17 dù build bằng JDK mới hơn. Kiểm tra chạy trên JDK 17 cần runtime 17 thực tế.
-JAR hiện tại chỉ cần Main; chưa đóng gói các dependency vào JAR.
-
-## Cấu trúc thư mục
+Java 17+, Maven 3.9+, PostgreSQL 14+, JDBC, Gson, Password4j and Java HttpServer.
+The frontend uses React, React Router, Vite, JavaScript/JSX and plain CSS.
+Use Node.js 22.12+ (or 20.19+) and npm, matching `frontend/package.json`.
 
 ```text
-pom.xml                         Cấu hình build, dependency và plugin
-src/main/java/com/mycompany/watch_store/
-  Main.java                     Điểm vào hiện tại
-  entity/BaseEntity.java        Lớp gốc abstract, id và createdAt có validation
-  config/ controller/ dao/ dto/ factory/ service/
-                                Package dự kiến, chỉ có package-info.java
-src/main/resources/             Tài nguyên ứng dụng, hiện trống
-docs/ARCHITECTURE.md             Kiến trúc hiện tại và thiết kế dự kiến
-docs/MILESTONES.md               Kế hoạch và tiêu chí từng milestone
-AGENTS.md                       Quy tắc phát triển và giảng giải
-target/                         Kết quả build, không commit
+React -> REST API -> Handler -> Service -> DAO -> PostgreSQL
 ```
 
-Package là namespace tổ chức lớp. Ví dụ Main có tên đầy đủ
-`com.mycompany.watch_store.Main`, tương ứng đường dẫn dưới `src/main/java`.
+The API boundary authenticates and authorizes requests. Handlers accept DTOs, services
+apply business rules and DAOs execute SQL. Entities and DTOs remain separate. Checkout
+creates the order, purchase-time items and unpaid COD payment, deducts stock and clears
+the cart in one transaction. Eligible cancellation restores stock in one transaction.
 
-## Maven và luồng chạy
+| OOP principle | Actual example |
+| --- | --- |
+| Abstraction | Abstract `BaseEntity` supplies identity and creation time; `PaymentService` defines the payment operation. |
+| Encapsulation | `Watch` validates private stock fields; `Cart.getItems()` returns a defensive copy. |
+| Inheritance | `AutomaticWatch` and `SmartWatch` extend `Watch`, which extends `BaseEntity`. |
+| Polymorphism | `DtoMapper.watch(Watch)` calls the subtype override of `getWarrantyInfo()`; `CODPaymentService` implements `PaymentService`. |
 
-`pom.xml` khai báo tọa độ dự án và phiên bản thư viện cố định:
-PostgreSQL JDBC 42.7.14, Gson 2.14.0.
-JDBC và Gson được chuẩn bị cho milestone sau; hiện chưa gọi chúng.
-Nguồn phiên bản: [pgJDBC](https://jdbc.postgresql.org/),
-[Gson releases](https://github.com/google/gson/releases).
+## Database setup
 
-Lifecycle chính: `validate -> compile -> test -> package -> verify -> install -> deploy`.
-Gọi một phase sẽ chạy các phase trước nó trong cùng lifecycle.
-`clean` thuộc lifecycle riêng, xóa kết quả build cũ trong target.
-`compile` biên dịch; `test` chạy unit test qua Surefire; `package` tạo JAR;
-`verify` hoàn thành các bước kiểm tra được cấu hình; `install` đưa artifact vào
-repository cục bộ; `deploy` xuất bản artifact vào repository từ xa khi được cấu hình.
-Hiện không có test tự động. Maven vẫn có phase test mặc định nhưng không có test để chạy.
-Kiểm tra build bằng `mvn clean package`.
+Use a **new, empty database**. From the repository root, replace `app_user` with your
+local PostgreSQL role; the tools prompt for your own database password when needed.
+Use a role with permission to create databases, or ask an administrator to create the
+database with your role as owner.
 
-Ví dụ: `mvn clean verify` tạo Main.class và JAR. Sau đó `java -jar ...`
-đọc Main-Class trong manifest, gọi `public static void main(String[] args)`,
-in thông báo rồi kết thúc. Chưa có request HTTP hay truy vấn SQL.
+```sh
+createdb -h localhost -p 5432 -U app_user watch_store
+psql -X -h localhost -p 5432 -U app_user -d watch_store -v ON_ERROR_STOP=1 -f database/schema.sql
+psql -X -h localhost -p 5432 -U app_user -d watch_store -v ON_ERROR_STOP=1 -f database/seed.sql
+```
 
-## Cơ sở dữ liệu và phạm vi
+`schema.sql` reproduces the existing `app` schema: eight tables, generated IDs, foreign
+keys, uniqueness rules, checks and `NUMERIC(12,0)` amounts. It initializes a database;
+it is not a migration and must not be applied over an existing installation.
+`seed.sql` adds fictional categories/products without overwriting them on repeat runs.
+It contains no users, passwords, orders or private records. Missing product images use
+the bundled illustrations.
 
-DB hiện có: `watch_store`, schema `app`, tám bảng users, categories, watches,
-carts, cart_items, orders, order_items, payments. M01 không kết nối hay thay đổi DB.
-Trước mã phụ thuộc DB phải kiểm tra schema thực tế. Không lưu mật khẩu trong Git.
-Chín nhóm tính năng và các quan hệ OOP sẽ được triển khai theo M02–M12;
-xem tài liệu milestone. BaseEntity M02 chưa ánh xạ vào bảng DB.
-M03 đã bổ sung Watch abstract, AutomaticWatch và SmartWatch; chưa có ánh xạ DB.
-Chạy demo sau build:
+Register customer accounts through the UI. To enable an administrator, register your own
+account, have the database owner promote that account, then log in again:
+
+```sql
+UPDATE app.users SET role = 'ADMIN' WHERE email = 'your-address@example.com';
+```
+
+There is no default administrator or shared password.
+
+## Backend configuration and startup
+
+Set these environment variables in the terminal that starts Java:
+
+| Variable | Purpose / default |
+| --- | --- |
+| `DB_URL` | Set your JDBC URL explicitly. Default: `jdbc:postgresql://localhost:5433/watch_store`. |
+| `DB_USER` | PostgreSQL role; default `postgres`. |
+| `DB_PASSWORD` | Required; your local database password. Never commit it. |
+| `API_HOST` | Bind address; default `127.0.0.1`. |
+| `PORT` | API port; default `8080`. |
+| `API_ORIGIN` | Exact API origin; default `http://localhost:8080`. |
+| `SESSION_TTL_SECONDS` | Default `1800`; allowed range 1–86400. |
+
+For example, in PowerShell, enter the password interactively:
 
 ```powershell
-java -cp target/classes com.mycompany.watch_store.demo.WatchOOPDemo
+$env:DB_URL = 'jdbc:postgresql://localhost:5432/watch_store'
+$env:DB_USER = 'app_user'
+$credential = Get-Credential -UserName $env:DB_USER -Message 'Local PostgreSQL credentials'
+$env:DB_PASSWORD = $credential.GetNetworkCredential().Password
+Remove-Variable credential
 ```
 
-Demo dùng tham chiếu Watch gọi bảo hành hai loại, giảm/tăng tồn kho và bắt lỗi
-vượt tồn kho, tràn int. Main và entry point của JAR được giữ nguyên.
-Dừng sau M03, chờ chỉ dẫn tiếp theo.
+From the repository root, build and copy runtime dependencies:
+
+```sh
+mvn clean package
+mvn dependency:copy-dependencies -DincludeScope=runtime
+```
+
+Start the REST API in Windows PowerShell:
+
+```powershell
+java -cp "target/classes;target/dependency/*" com.mycompany.watch_store.ApiServer
+```
+
+On macOS/Linux, use `:` as the classpath separator:
+
+```sh
+java -cp "target/classes:target/dependency/*" com.mycompany.watch_store.ApiServer
+```
+
+Run `ApiServer`, not `java -jar`: the JAR manifest still targets the original console
+`Main`. Maven has no automated test classes; package verifies compilation and packaging.
+
+## Frontend startup
+
+In another terminal:
+
+```sh
+cd frontend
+npm ci
+npm run dev
+```
+
+Open **http://localhost:5173**. Keep Java at its default local origin and port: Vite
+proxies `/api` to `127.0.0.1:8080` while preserving origin and CSRF checks. The browser
+handles the session cookie; session IDs are never stored in localStorage. Prices use
+English number formatting in VND.
+
+```sh
+npm run build
+npm run preview
+```
+
+Preview uses the same port and proxy; stop dev before starting preview. `dist/` still
+requires the Java API. Production hosting is not configured. Sessions are in memory
+and end when Java restarts. Google Fonts uses the internet, with local fallback fonts.
+
+## Repository contents
+
+- `src/main/java/`: handlers, services, DAOs, entities, DTOs and backend configuration.
+- `frontend/`: React source, Vite configuration, package/lock files and public assets.
+- `database/`: reproducible schema and safe sample catalog.
+- `pom.xml`: backend build and pinned dependencies.
+
+Install dependencies locally. Demos, development notes, tools, IDE settings, generated
+outputs and local credentials are excluded from the tracked project.
