@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="800" viewBox="0 0 640 800" fill="none">
+  <defs>
+    <linearGradient id="leather" x1="238" y1="0" x2="387" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#32281f"/><stop offset=".38" stop-color="#71513b"/><stop offset=".6" stop-color="#493124"/><stop offset="1" stop-color="#251e1a"/></linearGradient>
+    <linearGradient id="metal" x1="169" y1="257" x2="472" y2="562" gradientUnits="userSpaceOnUse"><stop stop-color="#a57346"/><stop offset=".23" stop-color="#edc99b"/><stop offset=".4" stop-color="#b38457"/><stop offset=".64" stop-color="#f0d0a2"/><stop offset=".85" stop-color="#8d603c"/><stop offset="1" stop-color="#d1a172"/></linearGradient>
+    <linearGradient id="rim" x1="205" y1="265" x2="438" y2="533" gradientUnits="userSpaceOnUse"><stop stop-color="#fff0d3"/><stop offset=".3" stop-color="#9b704a"/><stop offset=".7" stop-color="#efd1a4"/><stop offset="1" stop-color="#86603e"/></linearGradient>
+    <radialGradient id="face" cx="0" cy="0" r="1" gradientTransform="translate(290 354) rotate(59) scale(205)"><stop stop-color="#fffdf5"/><stop offset=".74" stop-color="#f1ebdc"/><stop offset="1" stop-color="#d7cbb5"/></radialGradient>
+    <linearGradient id="glass" x1="226" y1="291" x2="407" y2="512" gradientUnits="userSpaceOnUse"><stop stop-color="#fff" stop-opacity=".42"/><stop offset=".49" stop-color="#fff" stop-opacity="0"/><stop offset=".9" stop-color="#fff" stop-opacity=".07"/></linearGradient>
+    <filter id="shadow" x="-50%" y="-20%" width="200%" height="150%"><feDropShadow dx="20" dy="28" stdDeviation="20" flood-color="#30271e" flood-opacity=".24"/></filter>
+    <g id="hour"><path d="M320 287v18" stroke="#806342" stroke-width="3"/><path d="M320 288v15" stroke="#ddc49b" stroke-width="1"/></g>
+    <g id="minute"><path d="M320 279v5" stroke="#a19883" stroke-width="1"/></g>
+  </defs>
+  <g transform="rotate(20 320 400)" filter="url(#shadow)">
+    <path d="M266 46q54-18 108 0l11 245H254l12-245Z" fill="url(#leather)" stroke="#35271e" stroke-width="2"/>
+    <path d="M254 507h131l-12 212q-4 40-53 51-49-11-53-51l-13-212Z" fill="url(#leather)" stroke="#35271e" stroke-width="2"/>
+    <path d="m279 54-10 225m92-225 10 225m-102 243 12 193q2 23 39 36 37-13 39-36l12-193" stroke="#b18a64" stroke-opacity=".55" stroke-width="1.6" stroke-dasharray="4 5"/>
+    <path d="M283 65h74M280 102h80M279 142h82M277 182h86M275 222h90M271 566h98M274 610h91M277 651h86M280 692h80" stroke="#1c1713" stroke-opacity=".26" stroke-width="2"/>
+    <g fill="#231b16" stroke="#9a7352" stroke-width=".8"><ellipse cx="320" cy="586" rx="3" ry="5"/><ellipse cx="320" cy="617" rx="3" ry="5"/><ellipse cx="320" cy="648" rx="3" ry="5"/><ellipse cx="320" cy="679" rx="3" ry="5"/><ellipse cx="320" cy="710" rx="3" ry="5"/></g>
+    <path d="m248 303 7-53 20-12h90l20 12 7 53M248 497l7 53 20 12h90l20-12 7-53" fill="url(#metal)" stroke="#997149" stroke-width="2"/>
+    <rect x="458" y="384" width="24" height="33" rx="6" fill="url(#metal)" stroke="#a4784f" stroke-width="2"/>
+    <path d="M465 388v25m5-25v25m5-25v25" stroke="#8c6442" stroke-width="1.4"/>
+    <circle cx="320" cy="400" r="147" fill="url(#metal)" stroke="#b38961" stroke-width="2"/>
+    <circle cx="320" cy="400" r="136" fill="url(#rim)"/>
+    <circle cx="320" cy="400" r="129" fill="url(#face)" stroke="#816a4c" stroke-width="1.5"/>
+    <circle cx="320" cy="400" r="119" stroke="#b6aa90" stroke-width=".6"/>
+    <g>
+      <use href="#hour"/><use href="#hour" transform="rotate(30 320 400)"/><use href="#hour" transform="rotate(60 320 400)"/><use href="#hour" transform="rotate(90 320 400)"/><use href="#hour" transform="rotate(120 320 400)"/><use href="#hour" transform="rotate(150 320 400)"/><use href="#hour" transform="rotate(180 320 400)"/><use href="#hour" transform="rotate(210 320 400)"/><use href="#hour" transform="rotate(240 320 400)"/><use href="#hour" transform="rotate(270 320 400)"/><use href="#hour" transform="rotate(300 320 400)"/><use href="#hour" transform="rotate(330 320 400)"/>
+      <use href="#minute" transform="rotate(6 320 400)"/><use href="#minute" transform="rotate(12 320 400)"/><use href="#minute" transform="rotate(18 320 400)"/><use href="#minute" transform="rotate(24 320 400)"/><use href="#minute" transform="rotate(36 320 400)"/><use href="#minute" transform="rotate(42 320 400)"/><use href="#minute" transform="rotate(48 320 400)"/><use href="#minute" transform="rotate(54 320 400)"/><use href="#minute" transform="rotate(66 320 400)"/><use href="#minute" transform="rotate(72 320 400)"/><use href="#minute" transform="rotate(78 320 400)"/><use href="#minute" transform="rotate(84 320 400)"/>
+      <use href="#minute" transform="rotate(96 320 400)"/><use href="#minute" transform="rotate(102 320 400)"/><use href="#minute" transform="rotate(108 320 400)"/><use href="#minute" transform="rotate(114 320 400)"/><use href="#minute" transform="rotate(126 320 400)"/><use href="#minute" transform="rotate(132 320 400)"/><use href="#minute" transform="rotate(138 320 400)"/><use href="#minute" transform="rotate(144 320 400)"/><use href="#minute" transform="rotate(156 320 400)"/><use href="#minute" transform="rotate(162 320 400)"/><use href="#minute" transform="rotate(168 320 400)"/><use href="#minute" transform="rotate(174 320 400)"/>
+      <use href="#minute" transform="rotate(186 320 400)"/><use href="#minute" transform="rotate(192 320 400)"/><use href="#minute" transform="rotate(198 320 400)"/><use href="#minute" transform="rotate(204 320 400)"/><use href="#minute" transform="rotate(216 320 400)"/><use href="#minute" transform="rotate(222 320 400)"/><use href="#minute" transform="rotate(228 320 400)"/><use href="#minute" transform="rotate(234 320 400)"/><use href="#minute" transform="rotate(246 320 400)"/><use href="#minute" transform="rotate(252 320 400)"/><use href="#minute" transform="rotate(258 320 400)"/><use href="#minute" transform="rotate(264 320 400)"/>
+      <use href="#minute" transform="rotate(276 320 400)"/><use href="#minute" transform="rotate(282 320 400)"/><use href="#minute" transform="rotate(288 320 400)"/><use href="#minute" transform="rotate(294 320 400)"/><use href="#minute" transform="rotate(306 320 400)"/><use href="#minute" transform="rotate(312 320 400)"/><use href="#minute" transform="rotate(318 320 400)"/><use href="#minute" transform="rotate(324 320 400)"/><use href="#minute" transform="rotate(336 320 400)"/><use href="#minute" transform="rotate(342 320 400)"/><use href="#minute" transform="rotate(348 320 400)"/><use href="#minute" transform="rotate(354 320 400)"/>
+    </g>
+    <text x="320" y="349" text-anchor="middle" fill="#4e5146" font-family="Georgia,serif" font-size="24" letter-spacing="5">HORA</text>
+    <text x="320" y="365" text-anchor="middle" fill="#8b806a" font-family="Arial,sans-serif" font-size="6" letter-spacing="2">AUTOMATIC</text>
+    <circle cx="320" cy="445" r="24" stroke="#c3b69e" stroke-width=".6"/><circle cx="320" cy="445" r="20" stroke="#c3b69e" stroke-width=".4"/>
+    <path d="M320 426v4m0 30v4m-19-19h4m30 0h4m-19 0 9-10" stroke="#998064" stroke-width="1"/>
+    <rect x="391" y="391" width="18" height="17" fill="#fdf9ed" stroke="#b9a98e"/><text x="400" y="403" text-anchor="middle" fill="#565447" font-family="Georgia,serif" font-size="10">18</text>
+    <path d="m320 401-51-54 4-5 52 54-5 5Z" fill="#4c5048" stroke="#c6b18c" stroke-width="1"/>
+    <path d="m316 400 82-49 3 4-80 50-5-5Z" fill="#4c5048" stroke="#c6b18c" stroke-width="1"/>
+    <path d="m320 400-31 74" stroke="#986c45" stroke-width="1.1"/><path d="m320 400 8-19" stroke="#986c45" stroke-width="2"/>
+    <circle cx="320" cy="400" r="5" fill="#b99461"/><circle cx="320" cy="400" r="2" fill="#565449"/>
+    <circle cx="320" cy="400" r="127" fill="url(#glass)"/>
+    <path d="M220 319a129 129 0 0 1 160-33" stroke="#fff8e8" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

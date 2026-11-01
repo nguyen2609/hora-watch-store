@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="440" viewBox="0 0 400 440" fill="none">
+  <defs>
+    <linearGradient id="strap" x1="164" x2="242" y2="440" gradientUnits="userSpaceOnUse"><stop stop-color="#1c292b"/><stop offset=".5" stop-color="#3d4c4a"/><stop offset="1" stop-color="#142324"/></linearGradient>
+    <linearGradient id="case" x1="112" y1="145" x2="288" y2="315" gradientUnits="userSpaceOnUse"><stop stop-color="#a87e4b"/><stop offset=".3" stop-color="#f2d8a9"/><stop offset=".6" stop-color="#9b753f"/><stop offset="1" stop-color="#d6b47a"/></linearGradient>
+    <radialGradient id="dial"><stop stop-color="#fefcf4"/><stop offset="1" stop-color="#e9dfc9"/></radialGradient>
+    <filter id="s"><feDropShadow dx="7" dy="12" stdDeviation="9" flood-color="#27372e" flood-opacity=".16"/></filter>
+  </defs>
+  <g filter="url(#s)" transform="rotate(-12 200 220)">
+    <path d="m170 38 60 0 9 135h-78l9-135Zm-9 236h78l-10 108q-2 19-29 26-27-7-29-26l-10-108Z" fill="url(#strap)"/>
+    <path d="m179 44-8 121m50-121 8 121m-58 117 9 96q1 12 20 19 19-7 20-19l9-96" stroke="#94a195" stroke-opacity=".45" stroke-dasharray="3 4"/>
+    <path d="m158 161 5-25h74l5 25m-84 118 5 25h74l5-25" fill="url(#case)"/>
+    <rect x="281" y="211" width="14" height="20" rx="4" fill="url(#case)"/>
+    <circle cx="200" cy="220" r="88" fill="url(#case)"/><circle cx="200" cy="220" r="79" fill="url(#dial)" stroke="#9d8967"/>
+    <circle cx="200" cy="220" r="72" stroke="#cbbd9e" stroke-width=".6"/>
+    <g stroke="#7c725a" stroke-width="2"><path d="M200 151v12m0 114v12m-69-69h12m114 0h12"/><path d="m165.5 160.2 6 10.4m57 98.8 6 10.4m-94.3-94.3 10.4 6m98.8 57 10.4 6m-119.6 0 10.4-6m98.8-57 10.4-6m-94.3 94.3 6-10.4m57-98.8 6-10.4"/></g>
+    <text x="200" y="194" text-anchor="middle" font-family="Georgia,serif" font-size="13" letter-spacing="3" fill="#4e5c50">HORA</text>
+    <text x="200" y="254" text-anchor="middle" font-family="Arial,sans-serif" font-size="5" letter-spacing="1.4" fill="#8d846f">AUTOMATIC</text>
+    <path d="m199 224-32-39 5-3 32 38-5 4Zm0-7 46-28 3 5-47 28-2-5Z" fill="#3e5147"/>
+    <path d="m200 220-18 43" stroke="#af8752"/><circle cx="200" cy="220" r="4" fill="#ae8b57"/>
+  </g>
+</svg>

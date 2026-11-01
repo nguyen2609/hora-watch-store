@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="440" viewBox="0 0 400 440" fill="none">
+  <defs>
+    <linearGradient id="strap" x1="169" y1="34" x2="237" y2="409" gradientUnits="userSpaceOnUse"><stop stop-color="#2b333b"/><stop offset=".5" stop-color="#484d54"/><stop offset="1" stop-color="#252c33"/></linearGradient>
+    <linearGradient id="case" x1="122" y1="140" x2="280" y2="304" gradientUnits="userSpaceOnUse"><stop stop-color="#f1eeeb"/><stop offset=".24" stop-color="#9b9d9c"/><stop offset=".5" stop-color="#d9dad7"/><stop offset=".8" stop-color="#858c8e"/><stop offset="1" stop-color="#c5c8c4"/></linearGradient>
+    <linearGradient id="face" x1="139" y1="149" x2="266" y2="292" gradientUnits="userSpaceOnUse"><stop stop-color="#253a3a"/><stop offset="1" stop-color="#0a171b"/></linearGradient>
+    <filter id="s"><feDropShadow dx="7" dy="12" stdDeviation="9" flood-color="#213d43" flood-opacity=".18"/></filter>
+  </defs>
+  <g filter="url(#s)" transform="rotate(12 200 220)">
+    <path d="M168 35q32-8 64 0l9 118h-82l9-118Zm-9 253h82l-11 104q-1 15-30 19-29-4-30-19l-11-104Z" fill="url(#strap)"/>
+    <path d="M176 49h48m-50 15h52m-53 15h54m-55 15h56m-57 15h58m-56 219h54m-52 15h50m-49 15h48m-46 15h44" stroke="#808a8e" stroke-opacity=".2"/>
+    <rect x="278" y="191" width="12" height="29" rx="5" fill="url(#case)"/><rect x="118" y="135" width="164" height="174" rx="42" fill="url(#case)"/>
+    <rect x="125" y="142" width="150" height="160" rx="35" fill="#101a20"/><rect x="131" y="148" width="138" height="148" rx="30" fill="url(#face)"/>
+    <text x="200" y="175" text-anchor="middle" font-family="Arial,sans-serif" font-size="7" letter-spacing="2" fill="#95c8b6">MON 18</text>
+    <text x="200" y="211" text-anchor="middle" font-family="Arial,sans-serif" font-size="34" letter-spacing="-1" fill="#f5f0dc">10:08</text>
+    <circle cx="200" cy="250" r="24" stroke="#354e4e" stroke-width="5"/><path d="M200 226a24 24 0 1 1-23 30" stroke="#b7d2a5" stroke-width="5" stroke-linecap="round"/>
+    <path d="m193 249 5 5 9-10" stroke="#d0e6bf" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M153 148h85q27 0 29 28" stroke="#fff" stroke-opacity=".2" stroke-width="2"/>
+  </g>
+</svg>
