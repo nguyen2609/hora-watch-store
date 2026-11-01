@@ -38,12 +38,12 @@ export default function OrderDetails() {
 
   return (
     <section className="order-details-page container" aria-labelledby="order-detail-heading">
-      <Link className="back-to-orders" to="/orders">← Lịch sử đơn hàng</Link>
-      <div className="section-heading"><div><span className="eyebrow">THE DETAILS MATTER</span><h1 id="order-detail-heading">Chi tiết đơn hàng{order ? ` #${order.id}` : ''}</h1></div>{order && !loading && !error && <OrderStatus status={order.status} />}</div>
-      {loading ? <div className="route-state" role="status">Đang tải chi tiết đơn hàng...</div> : error ? <Notice>{error} <button onClick={() => setRetry((value) => value + 1)}>Tải lại chi tiết</button></Notice> : order && (
+      <Link className="back-to-orders" to="/orders">← Order History</Link>
+      <div className="section-heading"><div><span className="eyebrow">THE DETAILS MATTER</span><h1 id="order-detail-heading">Order Details{order ? ` #${order.id}` : ''}</h1></div>{order && !loading && !error && <OrderStatus status={order.status} />}</div>
+      {loading ? <div className="route-state" role="status">Loading order details...</div> : error ? <Notice>{error} <button onClick={() => setRetry((value) => value + 1)}>Reload Details</button></Notice> : order && (
         <>
-          <time className="order-date" dateTime={order.createdAt}>Đặt ngày {formatDate(order.createdAt)}</time>
-          <div className="order-details-layout"><div className="ordered-products"><h2>Những thiết kế bạn đã chọn</h2><OrderItems items={order.items} /><div className="checkout-total"><span>Tổng tiền đơn hàng</span><strong>{formatPrice(order.totalAmount)}</strong></div><p className="historical-price-note">Đơn giá được giữ theo thời điểm mua hàng.</p></div><aside className="order-delivery"><h2>Thông tin nhận hàng</h2><dl><dt>Người nhận</dt><dd>{order.recipientName}</dd><dt>Số điện thoại</dt><dd>{order.recipientPhone}</dd><dt>Địa chỉ</dt><dd className="shipping-address">{order.shippingAddress}</dd><dt>Phương thức thanh toán</dt><dd>{order.paymentMethod === 'COD' ? 'Thanh toán khi nhận hàng (COD)' : order.paymentMethod}</dd><dt>Trạng thái thanh toán</dt><dd>{paymentStatus(order.payment.status)}</dd>{order.payment.paidAt && <><dt>Thanh toán lúc</dt><dd>{formatDate(order.payment.paidAt)}</dd></>}</dl></aside></div>
+          <time className="order-date" dateTime={order.createdAt}>Placed on {formatDate(order.createdAt)}</time>
+          <div className="order-details-layout"><div className="ordered-products"><h2>Your Selected Products</h2><OrderItems items={order.items} /><div className="checkout-total"><span>Order Total</span><strong>{formatPrice(order.totalAmount)}</strong></div><p className="historical-price-note">Unit prices are preserved from the time of purchase.</p></div><aside className="order-delivery"><h2>Shipping Details</h2><dl><dt>Recipient</dt><dd>{order.recipientName}</dd><dt>Phone Number</dt><dd>{order.recipientPhone}</dd><dt>Address</dt><dd className="shipping-address">{order.shippingAddress}</dd><dt>Payment Method</dt><dd>{order.paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : order.paymentMethod}</dd><dt>Payment Status</dt><dd>{paymentStatus(order.payment.status)}</dd>{order.payment.paidAt && <><dt>Paid At</dt><dd>{formatDate(order.payment.paidAt)}</dd></>}</dl></aside></div>
         </>
       )}
     </section>

@@ -35,22 +35,22 @@ export async function apiRequest(path, { method = 'GET', body, csrfToken, signal
 }
 
 export function errorMessage(error, action = 'request') {
-  if (error.code === 'INVALID_CREDENTIALS') return 'Email hoặc mật khẩu không đúng.';
-  if (error.code === 'EMAIL_EXISTS') return 'Email này đã được đăng ký. Hãy đăng nhập hoặc dùng email khác.';
-  if (error.code === 'CSRF_REJECTED') return 'Phiên bảo mật đã thay đổi. Vui lòng thử lại thao tác.';
-  if (error.code === 'SESSION_CHANGED') return 'Phiên đăng nhập đã thay đổi. Vui lòng tải lại trang.';
-  if (error.status === 401) return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
-  if (error.status === 403) return 'Tài khoản hoặc nguồn truy cập không được phép thực hiện thao tác này.';
-  if (action === 'admin' && error.status === 404) return 'Không tìm thấy dữ liệu quản trị. Hãy tải lại danh sách.';
-  if (action === 'admin' && error.status === 400) return 'Thông tin chưa hợp lệ. Kiểm tra danh mục, mã mẫu duy nhất, giá nguyên không âm và tồn kho.';
-  if (action === 'admin' && error.status === 409) return 'Thao tác không phù hợp trạng thái hiện tại hoặc mã mẫu bị trùng. Hãy tải lại dữ liệu trước khi thử tiếp.';
-  if (error.status === 404 && action === 'orders') return 'Không tìm thấy đơn hàng hoặc bạn không có quyền xem đơn này.';
-  if (error.status === 404 && action === 'checkout') return 'Một sản phẩm không còn khả dụng. Hãy quay lại kiểm tra giỏ hàng.';
-  if (error.status === 404) return 'Không tìm thấy sản phẩm hoặc sản phẩm không còn khả dụng. Hãy tải lại giỏ hàng.';
-  if (error.status === 400 && action === 'cart') return 'Không thể thay đổi giỏ hàng. Số lượng phải hợp lệ, còn đủ tồn kho và sản phẩm vẫn được bán. Giỏ hàng chưa được cập nhật.';
-  if (error.status === 400 && action === 'checkout') return 'Không thể đặt đơn. Vui lòng kiểm tra tồn kho, số lượng và thông tin nhận hàng. Đơn chưa được tạo.';
-  if (error.status === 409 && action === 'checkout') return 'Giỏ hàng trống hoặc đã thay đổi. Hãy kiểm tra giỏ hàng trước khi đặt lại.';
-  if (error.status === 400) return 'Thông tin chưa hợp lệ. Vui lòng kiểm tra các trường đã nhập.';
-  if (error.status === 409) return 'Dữ liệu vừa thay đổi hoặc thao tác bị trùng. Vui lòng kiểm tra rồi thử lại.';
-  return 'Chưa thể kết nối dịch vụ. Vui lòng thử lại sau; không gửi lại liên tục nếu chưa rõ kết quả.';
+  if (error.code === 'INVALID_CREDENTIALS') return 'Incorrect email address or password.';
+  if (error.code === 'EMAIL_EXISTS') return 'This email address is already registered. Log in or use a different address.';
+  if (error.code === 'CSRF_REJECTED') return 'Your security session has changed. Please try the action again.';
+  if (error.code === 'SESSION_CHANGED') return 'Your session has changed. Please reload the page.';
+  if (error.status === 401) return 'Your session has expired. Please log in again.';
+  if (error.status === 403) return 'Your account or request origin is not authorized to perform this action.';
+  if (action === 'admin' && error.status === 404) return 'The requested admin data was not found. Please reload the list.';
+  if (action === 'admin' && error.status === 400) return 'Invalid information. Check the category, unique model number, nonnegative whole-number price and stock quantity.';
+  if (action === 'admin' && error.status === 409) return 'This action conflicts with the current status, or the model number is already in use. Reload the data before trying again.';
+  if (error.status === 404 && action === 'orders') return 'This order was not found or you do not have permission to view it.';
+  if (error.status === 404 && action === 'checkout') return 'A product is no longer available. Please review your shopping cart.';
+  if (error.status === 404) return 'The product was not found or is no longer available. Please reload your shopping cart.';
+  if (error.status === 400 && action === 'cart') return 'Unable to update your shopping cart. Check that the quantity is valid, enough stock is available and the product is still on sale. Your shopping cart has not changed.';
+  if (error.status === 400 && action === 'checkout') return 'Unable to place your order. Please check stock, quantities and shipping details. No order was created.';
+  if (error.status === 409 && action === 'checkout') return 'Your shopping cart is empty or has changed. Please review it before placing your order again.';
+  if (error.status === 400) return 'Invalid information. Please check the fields you entered.';
+  if (error.status === 409) return 'The data has changed or this action was already performed. Please review it before trying again.';
+  return 'Unable to connect to the service. Please try again later. Avoid repeated submissions if the outcome is uncertain.';
 }

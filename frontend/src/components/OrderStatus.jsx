@@ -1,13 +1,13 @@
 const labels = {
-  PENDING: 'Chờ xác nhận',
-  CONFIRMED: 'Đã xác nhận',
-  SHIPPING: 'Đang giao',
-  DELIVERED: 'Đã giao',
-  CANCELLED: 'Đã hủy',
+  PENDING: 'Pending',
+  CONFIRMED: 'Confirmed',
+  SHIPPING: 'Shipping',
+  DELIVERED: 'Delivered',
+  CANCELLED: 'Cancelled',
 };
 
 export function paymentStatus(status) {
-  return ({ UNPAID: 'Chưa thanh toán', PAID: 'Đã thanh toán' })[status] || status;
+  return ({ UNPAID: 'Unpaid', PAID: 'Paid' })[status] || status;
 }
 
 export default function OrderStatus({ status }) {

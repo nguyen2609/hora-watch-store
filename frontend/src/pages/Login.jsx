@@ -20,14 +20,14 @@ export default function Login() {
   // Only known internal destinations are accepted; never redirect to an arbitrary URL.
   const destination = loginDestination(location.state?.from);
 
-  if (status === 'loading') return <div className="route-state container" role="status">Đang kiểm tra phiên đăng nhập...</div>;
+  if (status === 'loading') return <div className="route-state container" role="status">Checking your session...</div>;
   if (user) return <Navigate to={destination} replace />;
 
   async function submit(event) {
     event.preventDefault();
     const nextErrors = {};
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) nextErrors.email = 'Vui lòng nhập email hợp lệ.';
-    if (!isValidPassword(password)) nextErrors.password = 'Mật khẩu cần có từ 8 đến 15 ký tự.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) nextErrors.email = 'Please enter a valid email address.';
+    if (!isValidPassword(password)) nextErrors.password = 'Your password must be 8 to 15 characters long.';
     setErrors(nextErrors);
     setError('');
     if (Object.keys(nextErrors).length) return;
@@ -41,15 +41,15 @@ export default function Login() {
   }
 
   return (
-    <AuthLayout eyebrow="WELCOME BACK" title="Chào bạn trở lại." description="Đăng nhập để lưu những lựa chọn vào giỏ hàng của bạn.">
+    <AuthLayout eyebrow="WELCOME BACK" title="Welcome back." description="Log in to keep your favorite timepieces in your shopping cart.">
       {location.state?.notice && <Notice variant="success">{location.state.notice}</Notice>}
       {error && <Notice>{error}</Notice>}
       <form onSubmit={submit} noValidate className="account-form" aria-busy={busy}>
         <FormField id="login-email" label="Email" type="email" autoComplete="username" value={email} maxLength={150} onChange={(event) => setEmail(event.target.value)} error={errors.email} disabled={busy} required />
-        <FormField id="login-password" label="Mật khẩu" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} error={errors.password} hint={PASSWORD_HINT} disabled={busy} required />
-        <button type="submit" className="button button-dark account-submit" disabled={busy}>{busy ? 'Đang đăng nhập...' : 'Đăng nhập'}</button>
+        <FormField id="login-password" label="Password" type="password" autoComplete="current-password" value={password} onChange={(event) => setPassword(event.target.value)} error={errors.password} hint={PASSWORD_HINT} disabled={busy} required />
+        <button type="submit" className="button button-dark account-submit" disabled={busy}>{busy ? 'Logging in...' : 'Log In'}</button>
       </form>
-      <p className="account-switch">Chưa có tài khoản? <Link to="/register" state={{ from: destination }}>Đăng ký</Link></p>
+      <p className="account-switch">New to HORA? <Link to="/register" state={{ from: destination }}>Register</Link></p>
     </AuthLayout>
   );
 }

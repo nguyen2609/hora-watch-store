@@ -33,9 +33,9 @@ export default function App() {
 
   return (
     <div id="home" className="app-layout">
-      <a className="skip-link" href="#main-content">Đến nội dung chính</a>
+      <a className="skip-link" href="#main-content">Skip to main content</a>
       <Navbar onTypeChange={setWatchType} />
-      {(notice || authError) && <div className="container session-notice"><Notice variant={authError ? 'error' : 'info'}>{authError || notice}{authError ? <button onClick={() => refreshSession()}>Kiểm tra lại phiên</button> : <button onClick={clearNotice} aria-label="Đóng thông báo phiên">×</button>}</Notice></div>}
+      {(notice || authError) && <div className="container session-notice"><Notice variant={authError ? 'error' : 'info'}>{authError || notice}{authError ? <button onClick={() => refreshSession()}>Check session again</button> : <button onClick={clearNotice} aria-label="Dismiss session notification">×</button>}</Notice></div>}
       <main id="main-content">
         <Routes>
           <Route path="/" element={<Catalog watchType={watchType} onTypeChange={setWatchType} />} />
@@ -53,10 +53,10 @@ export default function App() {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="orders/:id" element={<AdminOrderDetails />} />
           </Route>
-          <Route path="*" element={<section className="route-state container"><h1>Trang này chưa có trong bộ sưu tập.</h1><Link className="button button-dark" to="/">Về trang chủ</Link></section>} />
+          <Route path="*" element={<section className="route-state container"><h1>This page could not be found.</h1><Link className="button button-dark" to="/">Back to Home</Link></section>} />
         </Routes>
       </main>
-      <footer className="site-footer"><div className="container footer-inner"><Link className="footer-brand" to="/">HORA<span>WATCH STORE</span></Link><p>Một chiếc đồng hồ. Một câu chuyện riêng.</p><span>© {new Date().getFullYear()} HORA</span></div></footer>
+      <footer className="site-footer"><div className="container footer-inner"><Link className="footer-brand" to="/">HORA<span>WATCH STORE</span></Link><p>One timepiece. Your own story.</p><span>© {new Date().getFullYear()} HORA</span></div></footer>
     </div>
   );
 }

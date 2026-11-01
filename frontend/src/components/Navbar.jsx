@@ -20,25 +20,25 @@ export default function Navbar({ onTypeChange }) {
   }
   return (
     <>
-      <div className="announcement">DẤU ẤN RIÊNG, TRONG TỪNG KHOẢNH KHẮC</div>
+      <div className="announcement">YOUR SIGNATURE, IN EVERY MOMENT</div>
       <header className="site-header">
-        <nav className="navbar container" aria-label="Điều hướng chính">
-          <Link className="brand" to="/" aria-label="HORA — Trang chủ">
+        <nav className="navbar container" aria-label="Main navigation">
+          <Link className="brand" to="/" aria-label="HORA — Home">
             <span className="brand-mark"><Icon name="clock" size={28} /></span>
             <span>HORA<span className="brand-caption">WATCH STORE</span></span>
           </Link>
           <div className="nav-links">
-            <Link to="/#collection" onClick={() => onTypeChange('ALL')}>Bộ sưu tập</Link>
+            <Link to="/#collection" onClick={() => onTypeChange('ALL')}>Products</Link>
             <Link to="/#collection" onClick={() => onTypeChange('AUTOMATIC')}>Automatic</Link>
             <Link to="/#collection" onClick={() => onTypeChange('SMART')}>Smartwatch</Link>
           </div>
           <div className="nav-account">
-            {status === 'loading' ? <span className="nav-session-loading">Đang kiểm tra phiên...</span> : user ? <>
-              {user.role === 'CUSTOMER' && <><NavLink to="/orders" className="orders-link">Đơn hàng</NavLink><NavLink to="/cart" className="cart-link"><Icon name="bag" size={18} /> Giỏ hàng</NavLink></>}
-              {user.role === 'ADMIN' && <NavLink to="/admin" className="orders-link">Quản trị</NavLink>}
+            {status === 'loading' ? <span className="nav-session-loading">Checking session...</span> : user ? <>
+              {user.role === 'CUSTOMER' && <><NavLink to="/orders" className="orders-link">Order History</NavLink><NavLink to="/cart" className="cart-link"><Icon name="bag" size={18} /> Shopping Cart</NavLink></>}
+              {user.role === 'ADMIN' && <NavLink to="/admin" className="orders-link">Admin Dashboard</NavLink>}
               <span className="nav-user" title={user.fullName}>{user.fullName}</span>
-              <button className="nav-logout" onClick={signOut} disabled={busy}>{busy ? 'Đang thoát...' : 'Đăng xuất'}</button>
-            </> : <><NavLink to="/login" className="nav-login">Đăng nhập</NavLink><NavLink to="/register" className="nav-cta">Đăng ký <Icon name="arrow" size={16} /></NavLink></>}
+              <button className="nav-logout" onClick={signOut} disabled={busy}>{busy ? 'Signing out...' : 'Log Out'}</button>
+            </> : <><NavLink to="/login" className="nav-login">Log In</NavLink><NavLink to="/register" className="nav-cta">Register <Icon name="arrow" size={16} /></NavLink></>}
           </div>
         </nav>
         {error && <div className="container"><Notice>{error}</Notice></div>}

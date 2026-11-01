@@ -75,10 +75,10 @@ export function AuthProvider({ children }) {
           setUser(null);
           setCsrfToken(null);
           setStatus('ready');
-          setNotice('Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại để tiếp tục.');
+          setNotice('Your session has expired. Please log in again to continue.');
         } else if (error.code === 'CSRF_REJECTED') {
           // Recover the current token, but never replay a write automatically.
-          setNotice('Phiên bảo mật đã thay đổi. Vui lòng kiểm tra giỏ hàng rồi thử lại thao tác.');
+          setNotice('Your security session has changed. Please review the current information before trying again.');
           await refreshSession();
         }
       }

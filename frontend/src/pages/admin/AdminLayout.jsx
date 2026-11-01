@@ -6,7 +6,7 @@ export default function AdminLayout() {
   const { user } = useAuth();
   return (
     <div className="admin-shell container">
-      <aside className="admin-sidebar"><span className="eyebrow">HORA ATELIER</span><h1>Quản trị</h1><p>Xin chào, {user.fullName}</p><nav aria-label="Quản trị"><NavLink end to="/admin">Tổng quan</NavLink><NavLink to="/admin/products">Sản phẩm</NavLink><NavLink to="/admin/orders">Đơn hàng & COD</NavLink></nav><div className="admin-sidebar-note">Chăm chút từng sản phẩm.<br />Trọn vẹn từng đơn hàng.</div></aside>
+      <aside className="admin-sidebar"><span className="eyebrow">HORA ATELIER</span><h1>Admin Dashboard</h1><p>Welcome, {user.fullName}</p><nav aria-label="Admin Dashboard"><NavLink end to="/admin">Overview</NavLink><NavLink to="/admin/products">Products</NavLink><NavLink to="/admin/orders">Order Management</NavLink></nav><div className="admin-sidebar-note">Care in every product.<br />Precision in every order.</div></aside>
       <div className="admin-content"><Outlet /></div>
     </div>
   );

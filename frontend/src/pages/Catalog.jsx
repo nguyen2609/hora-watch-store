@@ -39,7 +39,7 @@ export default function Catalog({ watchType, onTypeChange }) {
       } catch (failure) {
         if (active && failure.name !== 'AbortError') {
           setWatches([]);
-          setError('Chưa thể tải bộ sưu tập. Vui lòng thử lại hoặc kiểm tra API Java tại cổng 8080.');
+          setError('Unable to load products. Please try again shortly.');
         }
       } finally {
         if (active) setLoading(false);
@@ -69,40 +69,40 @@ export default function Catalog({ watchType, onTypeChange }) {
   return (
     <>
         <Hero />
-        <div className="values-strip container" aria-label="Khám phá HORA">
-          <div><Icon name="clock" size={26} /><span>Hai thế giới thời gian<small>Automatic & Smartwatch</small></span></div>
-          <div><Icon name="sparkle" size={26} /><span>Dấu ấn của riêng bạn<small>Từ cổ điển đến hiện đại</small></span></div>
-          <div><Icon name="check" size={26} /><span>Giá niêm yết rõ ràng<small>Hiển thị bằng Việt Nam đồng</small></span></div>
+        <div className="values-strip container" aria-label="Discover HORA">
+          <div><Icon name="clock" size={26} /><span>Two worlds of time<small>Automatic & Smartwatch</small></span></div>
+          <div><Icon name="sparkle" size={26} /><span>Your signature style<small>From classic to contemporary</small></span></div>
+          <div><Icon name="check" size={26} /><span>Clear, transparent pricing<small>All prices in VND</small></span></div>
         </div>
 
         <section id="collection" className="collection container" aria-labelledby="collection-heading">
           <div className="section-heading">
-            <div><span className="eyebrow">TÌM CHIẾC ĐỒNG HỒ CỦA BẠN</span><h2 id="collection-heading">Chọn một dấu ấn riêng.</h2></div>
-            <p>Vẻ đẹp cơ khí hay nhịp sống thông minh?<br />Khám phá thiết kế đồng hành cùng bạn.</p>
+            <div><span className="eyebrow">FIND YOUR TIMEPIECE</span><h2 id="collection-heading">Find your signature.</h2></div>
+            <p>Mechanical elegance or smart living?<br />Discover a timepiece for your every day.</p>
           </div>
           <WatchFilters filters={filters} onFiltersChange={setFilters} watchType={watchType} onTypeChange={onTypeChange} onApply={applyFilters} onReset={resetFilters} hasFilters={hasFilters} />
 
           <div className="results-heading" role="status" aria-live="polite">
-            <span>{loading ? 'Đang tìm những thiết kế dành cho bạn...' : error ? 'Bộ sưu tập chưa khả dụng' : <><strong>{visibleWatches.length}</strong> thiết kế trong bộ sưu tập</>}</span>
-            <span className="applied-query">{query.keyword && `“${query.keyword}”`}{query.keyword && query.maxPrice !== '' && ' · '}{query.maxPrice !== '' && `Đến ${formatPrice(query.maxPrice)}`}</span>
+            <span>{loading ? 'Finding your next timepiece...' : error ? 'Products are currently unavailable' : <><strong>{visibleWatches.length}</strong> {visibleWatches.length === 1 ? 'product' : 'products'} in the collection</>}</span>
+            <span className="applied-query">{query.keyword && `“${query.keyword}”`}{query.keyword && query.maxPrice !== '' && ' · '}{query.maxPrice !== '' && `Up to ${formatPrice(query.maxPrice)}`}</span>
           </div>
 
           <div aria-busy={loading} className="catalog-content">
             {loading ? (
-              <div className="watch-grid" aria-label="Đang tải đồng hồ">
+              <div className="watch-grid" aria-label="Loading products">
                 {Array.from({ length: 4 }, (_, index) => <div className="skeleton-card" key={index}><div className="skeleton-image" /><div className="skeleton-line" /><div className="skeleton-line short" /></div>)}
               </div>
             ) : error ? (
-              <div className="catalog-state" role="alert"><span className="state-icon"><Icon name="refresh" size={30} /></span><h3>Một nhịp nghỉ nhỏ.</h3><p>{error}</p><button className="button button-dark" onClick={() => setRetry((value) => value + 1)}>Thử lại <Icon name="refresh" size={16} /></button></div>
+              <div className="catalog-state" role="alert"><span className="state-icon"><Icon name="refresh" size={30} /></span><h3>A brief pause.</h3><p>{error}</p><button className="button button-dark" onClick={() => setRetry((value) => value + 1)}>Try Again <Icon name="refresh" size={16} /></button></div>
             ) : visibleWatches.length === 0 ? (
-              <div className="catalog-state"><span className="state-icon"><Icon name="search" size={30} /></span><h3>Chưa tìm thấy thiết kế phù hợp.</h3><p>Thử một tên khác, tăng mức giá hoặc khám phá toàn bộ bộ sưu tập.</p><button className="button button-dark" onClick={resetFilters}>Xem tất cả đồng hồ <Icon name="arrow" size={17} /></button></div>
+              <div className="catalog-state"><span className="state-icon"><Icon name="search" size={30} /></span><h3>No matching products found.</h3><p>Try another search, increase your budget or explore all products.</p><button className="button button-dark" onClick={resetFilters}>View All Products <Icon name="arrow" size={17} /></button></div>
             ) : (
               <div className="watch-grid">{visibleWatches.map((watch) => <WatchCard key={watch.id} watch={watch} />)}</div>
             )}
           </div>
         </section>
 
-        <section className="closing-note container" aria-label="Phong cách HORA"><span className="eyebrow">MORE THAN A TIMEPIECE</span><p>Không chỉ là thời gian.<br />Là cách bạn <em>để lại dấu ấn.</em></p><a href="#collection">Tìm thiết kế của bạn <Icon name="arrow" size={18} /></a></section>
+        <section className="closing-note container" aria-label="The HORA style"><span className="eyebrow">MORE THAN A TIMEPIECE</span><p>More than telling time.<br />A way to <em>make your mark.</em></p><a href="#collection">Find Your Timepiece <Icon name="arrow" size={18} /></a></section>
     </>
   );
 }
