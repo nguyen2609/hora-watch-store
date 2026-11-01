@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { useAuth } from '../context/AuthContext.jsx';
+import { errorMessage } from '../api/client.js';
+import { formatPrice } from '../utils/format.js';
+import Icon from './Icon.jsx';
 import automaticPlaceholder from '../assets/watch-automatic.svg';
 import smartPlaceholder from '../assets/watch-smart.svg';
-
-export const formatPrice = (value) => new Intl.NumberFormat('vi-VN', {
-  style: 'currency', currency: 'VND', maximumFractionDigits: 0,
-}).format(value);
 
 function safeImageUrl(value) {
   if (!value || typeof value !== 'string') return null;
@@ -17,11 +18,34 @@ function safeImageUrl(value) {
 }
 
 export default function WatchCard({ watch }) {
+  const { user, status, request } = useAuth();
+  const navigate = useNavigate();
+  const [busy, setBusy] = useState(false);
+  const [feedback, setFeedback] = useState('');
+  const [error, setError] = useState('');
   const [failedImage, setFailedImage] = useState(null);
   const imageUrl = safeImageUrl(watch.imageUrl);
   const hasPhoto = imageUrl && failedImage !== imageUrl;
   const isAutomatic = watch.watchType === 'AUTOMATIC';
   const inStock = watch.stockQuantity > 0;
+
+  async function addToCart() {
+    if (!user) {
+      navigate('/login', { state: { from: '/#collection', notice: 'Đăng nhập để thêm sản phẩm vào giỏ hàng.' } });
+      return;
+    }
+    setBusy(true);
+    setFeedback('');
+    setError('');
+    try {
+      // The server determines ownership, current stock and all monetary values.
+      await request('/api/cart/items', { method: 'POST', body: { watchId: watch.id, quantity: 1 } });
+      setFeedback('Đã thêm vào giỏ hàng.');
+    } catch (failure) {
+      if (failure.status === 401) navigate('/login', { state: { from: '/#collection' } });
+      else setError(errorMessage(failure, 'cart'));
+    } finally { setBusy(false); }
+  }
 
   return (
     <article className="watch-card">
@@ -39,6 +63,9 @@ export default function WatchCard({ watch }) {
           <span className="watch-price">{formatPrice(watch.price)}</span>
           <span className={`stock-status ${inStock ? '' : 'stock-empty'}`}><span />{inStock ? `Còn ${watch.stockQuantity}` : 'Hết hàng'}</span>
         </div>
+        <button className="button add-to-cart" type="button" aria-label={`Thêm ${watch.name} vào giỏ`} disabled={busy || status !== 'ready' || !inStock || Boolean(user && user.role !== 'CUSTOMER')} onClick={addToCart}><Icon name="bag" size={16} />{busy ? 'Đang thêm...' : !inStock ? 'Tạm hết hàng' : user && user.role !== 'CUSTOMER' ? 'Dành cho khách hàng' : 'Thêm vào giỏ'}</button>
+        {feedback && <p className="card-feedback" role="status">{feedback} <Link to="/cart">Xem giỏ hàng →</Link></p>}
+        {error && <p className="card-error" role="alert">{error}</p>}
       </div>
     </article>
   );
