@@ -34,7 +34,7 @@ export default function Navbar({ onTypeChange }) {
           </div>
           <div className="nav-account">
             {status === 'loading' ? <span className="nav-session-loading">Đang kiểm tra phiên...</span> : user ? <>
-              {user.role === 'CUSTOMER' && <NavLink to="/cart" className="cart-link"><Icon name="bag" size={18} /> Giỏ hàng</NavLink>}
+              {user.role === 'CUSTOMER' && <><NavLink to="/orders" className="orders-link">Đơn hàng</NavLink><NavLink to="/cart" className="cart-link"><Icon name="bag" size={18} /> Giỏ hàng</NavLink></>}
               <span className="nav-user" title={user.fullName}>{user.fullName}</span>
               <button className="nav-logout" onClick={signOut} disabled={busy}>{busy ? 'Đang thoát...' : 'Đăng xuất'}</button>
             </> : <><NavLink to="/login" className="nav-login">Đăng nhập</NavLink><NavLink to="/register" className="nav-cta">Đăng ký <Icon name="arrow" size={16} /></NavLink></>}

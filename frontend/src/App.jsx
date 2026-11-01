@@ -7,6 +7,9 @@ import Catalog from './pages/Catalog.jsx';
 import Login from './pages/Login.jsx';
 import Register from './pages/Register.jsx';
 import Cart from './pages/Cart.jsx';
+import Checkout from './pages/Checkout.jsx';
+import Orders from './pages/Orders.jsx';
+import OrderDetails from './pages/OrderDetails.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 
 export default function App() {
@@ -33,6 +36,9 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<ProtectedRoute><Cart /></ProtectedRoute>} />
+          <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+          <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+          <Route path="/orders/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
           <Route path="*" element={<section className="route-state container"><h1>Trang này chưa có trong bộ sưu tập.</h1><Link className="button button-dark" to="/">Về trang chủ</Link></section>} />
         </Routes>
       </main>

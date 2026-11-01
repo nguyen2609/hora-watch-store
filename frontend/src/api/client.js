@@ -41,8 +41,12 @@ export function errorMessage(error, action = 'request') {
   if (error.code === 'SESSION_CHANGED') return 'Phiên đăng nhập đã thay đổi. Vui lòng tải lại trang.';
   if (error.status === 401) return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
   if (error.status === 403) return 'Tài khoản hoặc nguồn truy cập không được phép thực hiện thao tác này.';
+  if (error.status === 404 && action === 'orders') return 'Không tìm thấy đơn hàng hoặc bạn không có quyền xem đơn này.';
+  if (error.status === 404 && action === 'checkout') return 'Một sản phẩm không còn khả dụng. Hãy quay lại kiểm tra giỏ hàng.';
   if (error.status === 404) return 'Không tìm thấy sản phẩm hoặc sản phẩm không còn khả dụng. Hãy tải lại giỏ hàng.';
   if (error.status === 400 && action === 'cart') return 'Không thể thay đổi giỏ hàng. Số lượng phải hợp lệ, còn đủ tồn kho và sản phẩm vẫn được bán. Giỏ hàng chưa được cập nhật.';
+  if (error.status === 400 && action === 'checkout') return 'Không thể đặt đơn. Vui lòng kiểm tra tồn kho, số lượng và thông tin nhận hàng. Đơn chưa được tạo.';
+  if (error.status === 409 && action === 'checkout') return 'Giỏ hàng trống hoặc đã thay đổi. Hãy kiểm tra giỏ hàng trước khi đặt lại.';
   if (error.status === 400) return 'Thông tin chưa hợp lệ. Vui lòng kiểm tra các trường đã nhập.';
   if (error.status === 409) return 'Dữ liệu vừa thay đổi hoặc thao tác bị trùng. Vui lòng kiểm tra rồi thử lại.';
   return 'Chưa thể kết nối dịch vụ. Vui lòng thử lại sau; không gửi lại liên tục nếu chưa rõ kết quả.';

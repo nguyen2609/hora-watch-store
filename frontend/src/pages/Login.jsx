@@ -6,6 +6,7 @@ import AuthLayout from '../components/AuthLayout.jsx';
 import FormField from '../components/FormField.jsx';
 import Notice from '../components/Notice.jsx';
 import { isValidPassword, PASSWORD_HINT } from '../utils/password.js';
+import { loginDestination } from '../utils/navigation.js';
 
 export default function Login() {
   const { user, status, login } = useAuth();
@@ -17,7 +18,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   // Only known internal destinations are accepted; never redirect to an arbitrary URL.
-  const destination = ['/cart', '/#collection'].includes(location.state?.from) ? location.state.from : '/';
+  const destination = loginDestination(location.state?.from);
 
   if (status === 'loading') return <div className="route-state container" role="status">Đang kiểm tra phiên đăng nhập...</div>;
   if (user) return <Navigate to={destination} replace />;
