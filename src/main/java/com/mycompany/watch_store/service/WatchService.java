@@ -5,7 +5,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.util.function.UnaryOperator;
 
+import com.mycompany.watch_store.config.JdbcTransactions;
 import com.mycompany.watch_store.dao.WatchDAO;
 import com.mycompany.watch_store.entity.AutomaticWatch;
 import com.mycompany.watch_store.entity.SmartWatch;
@@ -66,6 +68,31 @@ public final class WatchService {
         validateWatch(watch);
         requirePositiveId(watch.getId());
         watchDAO.update(watch);
+    }
+
+    /** Owns one HTTP PATCH transaction; locks before merging so concurrent stock is preserved. */
+    public Watch patchWatch(int id, UnaryOperator<Watch> patch) throws SQLException {
+        requirePositiveId(id);
+        if (patch == null) {
+            throw new IllegalArgumentException("Patch must not be null.");
+        }
+        return JdbcTransactions.execute(null, connection -> {
+            WatchDAO watches = new WatchDAO(connection);
+            Watch current = watches.findByIdForUpdate(id);
+            if (current == null) {
+                throw new NoSuchElementException("Watch does not exist.");
+            }
+            String originalType = current.getWatchType();
+            var originalCreatedAt = current.getCreatedAt();
+            Watch updated = patch.apply(current);
+            validateWatch(updated);
+            if (updated.getId() != id || !updated.getWatchType().equals(originalType)
+                    || !updated.getCreatedAt().equals(originalCreatedAt)) {
+                throw new IllegalArgumentException("Patch must preserve watch identity and subtype.");
+            }
+            new WatchService(watches).updateWatch(updated);
+            return updated;
+        });
     }
 
     /** Internal management operation; preserves historical records through soft delete. */

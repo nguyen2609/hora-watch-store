@@ -104,6 +104,21 @@ public final class OrderDAO {
         });
     }
 
+    /** Internal management query. The API must authorize ADMIN before using it. */
+    public List<Order> findAll() throws SQLException {
+        return JdbcTransactions.execute(transactionConnection, connection -> {
+            try (PreparedStatement statement = connection.prepareStatement(
+                    "SELECT " + COLUMNS + " FROM app.orders ORDER BY id FOR SHARE");
+                 ResultSet result = statement.executeQuery()) {
+                List<Order> orders = new ArrayList<>();
+                while (result.next()) {
+                    orders.add(mapRow(connection, result));
+                }
+                return List.copyOf(orders);
+            }
+        });
+    }
+
     public List<Order> findByUserId(int userId) throws SQLException {
         positiveId(userId);
         return JdbcTransactions.execute(transactionConnection, connection -> {

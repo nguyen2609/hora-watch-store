@@ -10,6 +10,12 @@ import Cart from './pages/Cart.jsx';
 import Checkout from './pages/Checkout.jsx';
 import Orders from './pages/Orders.jsx';
 import OrderDetails from './pages/OrderDetails.jsx';
+import AdminLayout from './pages/admin/AdminLayout.jsx';
+import AdminOverview from './pages/admin/AdminOverview.jsx';
+import AdminProducts from './pages/admin/AdminProducts.jsx';
+import AdminProductForm from './pages/admin/AdminProductForm.jsx';
+import AdminOrders from './pages/admin/AdminOrders.jsx';
+import AdminOrderDetails from './pages/admin/AdminOrderDetails.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 
 export default function App() {
@@ -39,6 +45,14 @@ export default function App() {
           <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
           <Route path="/orders/:id" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
+          <Route path="/admin" element={<ProtectedRoute role="ADMIN"><AdminLayout /></ProtectedRoute>}>
+            <Route index element={<AdminOverview />} />
+            <Route path="products" element={<AdminProducts />} />
+            <Route path="products/new" element={<AdminProductForm />} />
+            <Route path="products/:id/edit" element={<AdminProductForm />} />
+            <Route path="orders" element={<AdminOrders />} />
+            <Route path="orders/:id" element={<AdminOrderDetails />} />
+          </Route>
           <Route path="*" element={<section className="route-state container"><h1>Trang này chưa có trong bộ sưu tập.</h1><Link className="button button-dark" to="/">Về trang chủ</Link></section>} />
         </Routes>
       </main>

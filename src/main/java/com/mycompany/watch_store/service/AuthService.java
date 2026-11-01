@@ -3,6 +3,7 @@ package com.mycompany.watch_store.service;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Locale;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import com.mycompany.watch_store.dao.UserDAO;
@@ -61,6 +62,15 @@ public final class AuthService {
         boolean verified = PasswordHasher.verify(password, user == null ? DUMMY_HASH : user.getPasswordHash());
         if (user == null || !verified) {
             throw new SecurityException(INVALID_CREDENTIALS);
+        }
+        return user;
+    }
+
+    /** Internal lookup for an already authenticated session, not credential verification. */
+    public User getUserById(int userId) throws SQLException {
+        User user = userDAO.findById(userId);
+        if (user == null) {
+            throw new NoSuchElementException("User does not exist.");
         }
         return user;
     }

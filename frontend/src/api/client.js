@@ -41,6 +41,9 @@ export function errorMessage(error, action = 'request') {
   if (error.code === 'SESSION_CHANGED') return 'Phiên đăng nhập đã thay đổi. Vui lòng tải lại trang.';
   if (error.status === 401) return 'Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.';
   if (error.status === 403) return 'Tài khoản hoặc nguồn truy cập không được phép thực hiện thao tác này.';
+  if (action === 'admin' && error.status === 404) return 'Không tìm thấy dữ liệu quản trị. Hãy tải lại danh sách.';
+  if (action === 'admin' && error.status === 400) return 'Thông tin chưa hợp lệ. Kiểm tra danh mục, mã mẫu duy nhất, giá nguyên không âm và tồn kho.';
+  if (action === 'admin' && error.status === 409) return 'Thao tác không phù hợp trạng thái hiện tại hoặc mã mẫu bị trùng. Hãy tải lại dữ liệu trước khi thử tiếp.';
   if (error.status === 404 && action === 'orders') return 'Không tìm thấy đơn hàng hoặc bạn không có quyền xem đơn này.';
   if (error.status === 404 && action === 'checkout') return 'Một sản phẩm không còn khả dụng. Hãy quay lại kiểm tra giỏ hàng.';
   if (error.status === 404) return 'Không tìm thấy sản phẩm hoặc sản phẩm không còn khả dụng. Hãy tải lại giỏ hàng.';
