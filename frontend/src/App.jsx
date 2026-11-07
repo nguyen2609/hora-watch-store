@@ -18,11 +18,8 @@ import AdminOrders from './pages/admin/AdminOrders.jsx';
 import AdminOrderDetails from './pages/admin/AdminOrderDetails.jsx';
 import { useAuth } from './context/AuthContext.jsx';
 
-// Hello, testing
+// Hello, testing from testing-2
 
-// Hello, testing again
-
-// Hello testing once again
 export default function App() {
   const [watchType, setWatchType] = useState('ALL');
   const { authError, notice, refreshSession, clearNotice } = useAuth();
